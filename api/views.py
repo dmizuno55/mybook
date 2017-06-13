@@ -5,11 +5,10 @@ from cms.models import Book
 
 
 def render_json_response(request, data, status=None):
-    """response $B$r(B JSON $B$GJV5Q(B"""
     json_str = json.dumps(data, ensure_ascii=False, indent=2)
     callback = request.GET.get('callback')
     if not callback:
-        callback = request.POST.get('callback')  # POST$B$G(BJSONP$B$N>l9g(B
+        callback = request.POST.get('callback')  # POSTでJSONPの場合
     if callback:
         json_str = "%s(%s)" % (callback, json_str)
         response = HttpResponse(json_str, content_type='application/javascript; charset=UTF-8', status=status)
@@ -19,7 +18,6 @@ def render_json_response(request, data, status=None):
 
 
 def book_list(request):
-    """$B=q@R$H46A[$N(BJSON$B$rJV$9(B"""
     books = []
     for book in Book.objects.all().order_by('id'):
 
@@ -42,4 +40,3 @@ def book_list(request):
 
     data = OrderedDict([ ('books', books) ])
     return render_json_response(request, data)
-
